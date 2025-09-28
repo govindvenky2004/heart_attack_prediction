@@ -1,0 +1,16 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Temporary files
+temp_pdfs/
+output.pdf
+*.json                 # optional, if not required in deployment
+*.ipynb                # optional: ignore notebooks
+
+# Python environment
+venv/
+.env
+
+# Models (optional if too large)
+models/*.pkl

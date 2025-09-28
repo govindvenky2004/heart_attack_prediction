@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+*.ipynb
+temp_pdfs/
+output.pdf
+*.json
+
+# Node/React (frontend inside backend)
+app/frontend/node_modules/
+app/frontend/build/
+app/frontend/.pnp
+app/frontend/coverage/
+app/frontend/.env*
+
+# Misc
+.DS_Store
