@@ -10,6 +10,3 @@ PyPDF2
 reportlab
 python-dotenv
 requests
-os
-uuid
-io
