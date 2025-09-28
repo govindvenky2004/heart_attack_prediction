@@ -1,0 +1,54 @@
+[
+  {
+    "question": "What are the symptoms of a heart attack?",
+    "answer": "Common symptoms include chest pain or discomfort, shortness of breath, nausea, cold sweats, dizziness, or pain in the arm, jaw, neck, or back. Symptoms can vary between individuals, especially in women."
+  },
+  {
+    "question": "How can I reduce my cholesterol?",
+    "answer": "Maintain a healthy diet low in saturated fats and trans fats, exercise regularly, avoid smoking, limit alcohol, and consult your doctor for medications if needed."
+  },
+  {
+    "question": "Is chest pain always a heart attack?",
+    "answer": "Not always. Chest pain can result from stress, muscle strain, or other conditions. However, severe, sudden, or persistent chest pain should be evaluated by a doctor immediately."
+  },
+  {
+    "question": "What is a normal resting heart rate?",
+    "answer": "For most adults, a normal resting heart rate is between 60-100 beats per minute. Athletes may have lower rates."
+  },
+  {
+    "question": "What lifestyle changes help prevent heart disease?",
+    "answer": "Maintain a balanced diet, exercise at least 30 minutes a day, avoid smoking, limit alcohol intake, manage stress, and get regular health check-ups."
+  },
+  {
+    "question": "Can stress cause heart problems?",
+    "answer": "Yes, chronic stress can increase blood pressure and contribute to heart disease. Practice relaxation techniques, exercise, and seek professional help if needed."
+  },
+  {
+    "question": "How often should I check my blood pressure?",
+    "answer": "Adults should check their blood pressure at least once a year or more frequently if you have hypertension or other risk factors."
+  },
+  {
+    "question": "What is the difference between a heart attack and cardiac arrest?",
+    "answer": "A heart attack occurs when blood flow to the heart is blocked. Cardiac arrest happens when the heart stops beating suddenly. Both are medical emergencies."
+  },
+  {
+    "question": "Can heart disease be genetic?",
+    "answer": "Yes, family history can increase risk. However, lifestyle choices such as diet, exercise, and avoiding smoking also play a major role."
+  },
+  {
+    "question": "What foods are good for heart health?",
+    "answer": "Eat plenty of fruits, vegetables, whole grains, lean proteins, and healthy fats like olive oil, nuts, and fish. Limit processed and fried foods."
+  },
+  {
+    "question": "When should I see a doctor?",
+    "answer": "See a doctor if you experience chest pain, shortness of breath, unusual fatigue, dizziness, or any other persistent symptoms related to heart health."
+  },
+  {
+    "question": "Is it ok if my blood pressure is high?",
+    "answer": "High blood pressure can be dangerous. Monitor it regularly, follow a healthy diet, exercise, and consult a doctor."
+  },
+  {
+    "question": "Can stress affect heart health?",
+    "answer": "Yes, chronic stress can increase blood pressure and heart risk. Practice relaxation techniques and exercise."
+  }
+]
