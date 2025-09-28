@@ -5,7 +5,7 @@ __pycache__/
 # Temporary files
 temp_pdfs/
 output.pdf
-*.json                 # optional, if not required in deployment
+#*.json                 # optional, if not required in deployment
 *.ipynb                # optional: ignore notebooks
 
 # Python environment
@@ -14,3 +14,4 @@ venv/
 
 # Models (optional if too large)
 models/*.pkl
+frontend/

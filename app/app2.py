@@ -18,6 +18,8 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.pdfgen import canvas
 from PyPDF2 import PdfReader, PdfWriter
+from dotenv import load_dotenv
+load_dotenv()
 
 # Heart Chatbot
 from heart_chatbot import HeartChatbot
@@ -42,7 +44,7 @@ app.add_middleware(
 # ------------------- Load Models -------------------
 model = joblib.load("../models/random_forest.pkl")
 chatbot = HeartChatbot(kb_path="heart_kb.json")
-GOOGLE_API_KEY = "AIzaSyCVxOBBL0vwloJcak5OwKawij01uupF_o0"  # Replace with your key
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")  # Replace with your key
 
 # ------------------- Input Schemas -------------------
 class HeartInput(BaseModel):
