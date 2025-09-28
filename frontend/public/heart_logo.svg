@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 42 42">
+  <defs>
+    <!-- Gradient for main heart -->
+    <linearGradient id="heartGradient" x1="21" y1="6" x2="21" y2="36" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ff7f91"/>
+      <stop offset="0.5" stop-color="#e84165"/>
+      <stop offset="1" stop-color="#b41a2d"/>
+    </linearGradient>
+
+    <!-- Highlight gradient for upper heart -->
+    <radialGradient id="innerHighlight" cx="21" cy="12" r="16">
+      <stop offset="0%" stop-color="#ffffff33"/>
+      <stop offset="100%" stop-color="#ffffff00"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Elliptical shadow for 3D effect -->
+  <ellipse cx="21" cy="35" rx="14" ry="5" fill="#e77d90" opacity="0.25"/>
+
+  <!-- Heart shape with smoother tip -->
+  <path
+    d="M21 36
+       C12 28, 3 18.5, 3 14.6
+       C3 9.9, 7.1 6, 12 6
+       C16 6, 18.5 7.3, 21 10
+       C23.5 7.3, 26 6, 30 6
+       C35 6, 39 9.9, 39 14.6
+       C39 18.5, 30 28, 21 36 Z"
+    fill="url(#heartGradient)"
+    stroke="#b41a2d"
+    stroke-width="1.2"
+  />
+
+  <!-- Subtle upper highlight -->
+  <path
+    d="M12 6
+       C16 6, 18.5 7.3, 21 10
+       C23.5 7.3, 26 6, 30 6
+       C35 6, 39 9.9, 39 14.6
+       C39 18.5, 30 28, 21 36
+       C12 28, 3 18.5, 3 14.6
+       C3 9.9, 7.1 6, 12 6 Z"
+    fill="url(#innerHighlight)"
+  />
+</svg>
