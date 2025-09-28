@@ -10,3 +10,4 @@ PyPDF2
 reportlab
 python-dotenv
 requests
+sentence-transformers
