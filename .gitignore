@@ -15,5 +15,11 @@ app/frontend/.pnp
 app/frontend/coverage/
 app/frontend/.env*
 
+# ML data and weights (already committed, but keep future changes out)
+data/ECG/
+runs/
+models/*.pt
+*.cache
+
 # Misc
 .DS_Store
