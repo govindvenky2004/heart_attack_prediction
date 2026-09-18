@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // import navigation
+import { useNavigate } from "react-router-dom";
+import BackButton from "./BackButton";
 
 export default function Table() {
-  const navigate = useNavigate(); // initialize navigation
+  const navigate = useNavigate();
 
   const initialFormData = {
+    name: "",
     Age: "",
     Sex: "",
     ChestPainType: "",
@@ -31,10 +33,7 @@ export default function Table() {
   };
 
   const handleRadioChange = (e) => {
-    setFormData({
-      ...formData,
-      Sex: e.target.value,
-    });
+    setFormData({ ...formData, Sex: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -43,6 +42,7 @@ export default function Table() {
     setResult(null);
 
     const payload = {
+      name: formData.name,
       Age: Number(formData.Age),
       Sex: Number(formData.Sex),
       ChestPainType: Number(formData.ChestPainType),
@@ -66,7 +66,7 @@ export default function Table() {
       if (!response.ok) throw new Error(`API error: ${response.status}`);
 
       const data = await response.json();
-      if (data && typeof data.probability === "number") setResult(data);
+      if (data && data.patient_id) setResult(data);
       else setResult({ error: "Invalid response from backend" });
     } catch (error) {
       setResult({ error: "Failed to fetch prediction. Check backend." });
@@ -75,16 +75,14 @@ export default function Table() {
     }
   };
 
-  const handleHome = () => {
-    navigate("/"); // navigate to home page
-  };
-
   const RISK_THRESHOLD = 0.45;
-  const isHighRisk = result && typeof result.probability === "number"
-    ? result.probability >= RISK_THRESHOLD
-    : false;
+  const isHighRisk =
+    result && typeof result.probability === "number"
+      ? result.probability >= RISK_THRESHOLD
+      : false;
 
   const inputFields = [
+    { label: "Name", name: "name", type: "text" },
     { label: "Age", name: "Age", type: "number", unit: "years" },
     { label: "Chest Pain Type", name: "ChestPainType", type: "number", unit: "0-3" },
     { label: "Resting BP", name: "RestingBP", type: "number", unit: "mmHg" },
@@ -102,95 +100,120 @@ export default function Table() {
       style={{
         fontFamily: "'Inter','Segoe UI',Arial,sans-serif",
         background: "#99bf91ff",
-        minHeight: "80vh",
-        padding: "0px",
-        margin: 70,
-        borderRadius: 30,
+        minHeight: "100vh",
+        padding: "2rem 1rem",
+        borderRadius: 20,
+        position: "relative",
       }}
     >
-      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "54px 16px 18px 16px", textAlign: "center" }}>
-        <h1 style={{ fontWeight: 800, fontSize: "3.3rem", letterSpacing: "-.02em", margin: 0, color: "#222" }}>
+      {/* ✅ Back to Home Button */}
+      <BackButton />
+
+      <div
+        style={{
+          maxWidth: "950px",
+          margin: "0 auto",
+          padding: "2rem 1rem",
+          textAlign: "center",
+        }}
+      >
+        <h1
+          style={{
+            fontWeight: 800,
+            fontSize: "clamp(1.8rem, 4vw, 3.2rem)",
+            letterSpacing: "-.02em",
+            margin: 0,
+            color: "#222",
+          }}
+        >
           Heart Attack Risk Prediction
         </h1>
-        <div style={{ marginTop: 24, color: "#5c5858ff", fontSize: "1.23rem", fontWeight: 450 }}>
+        <div
+          style={{
+            marginTop: 16,
+            color: "#5c5858ff",
+            fontSize: "clamp(1rem, 2.5vw, 1.2rem)",
+            fontWeight: 450,
+          }}
+        >
           AI-powered tool for simple health risk estimation
         </div>
       </div>
 
       <div
         style={{
-          maxWidth: 1100,
-          margin: "65px auto 0",
+          maxWidth: "950px",
+          margin: "40px auto 0",
           background: "#fff",
           boxShadow: "0 2.5px 22px rgba(34,34,34,0.07)",
           borderRadius: "13px",
-          padding: "34px 32px 24px 32px",
+          padding: "2rem 1.5rem",
           border: "1px solid #ececec",
         }}
       >
-        <button
-          onClick={handleHome} // now navigates to home
-          style={{
-            marginBottom: 20,
-            padding: "8px 20px",
-            background: "#f0f0f0",
-            border: "1px solid #ccc",
-            borderRadius: "6px",
-            cursor: "pointer",
-            fontWeight: 600,
-            transition: "all 0.3s ease",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = "#e0e0e0")}
-          onMouseLeave={(e) => (e.currentTarget.style.background = "#f0f0f0")}
-        >
-          🏠 Home
-        </button>
-
         <form onSubmit={handleSubmit}>
           <div
             style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "28px 36px",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap: "24px",
               borderBottom: "1px solid #eee",
               paddingBottom: "20px",
               marginBottom: "22px",
             }}
           >
-            {inputFields.map(({ label, name, type, step, unit }) => (
-              <div key={name} style={{ flex: "1 1 300px", minWidth: 280, marginBottom: 20 }}>
-                <label style={{ fontWeight: 600, color: "#363636", fontSize: "1.05rem", display: "block" }}>
-                  {label} ({unit})
-                </label>
-                <input
-                  id={name}
-                  name={name}
-                  type={type}
-                  step={step}
-                  min={0}
-                  value={formData[name]}
-                  onChange={handleChange}
-                  placeholder={`Enter ${label.toLowerCase()}`}
-                  style={{
-                    width: "100%",
-                    marginTop: 6,
-                    padding: "10px",
-                    fontSize: "1rem",
-                    background: "#fafafa",
-                    border: "1.3px solid #e8e8e8",
-                    borderRadius: "6px",
-                    color: "#14181e",
-                  }}
-                />
-              </div>
-            ))}
+            {inputFields.map(({ label, name, type, step, unit }) =>
+              name !== "Sex" ? (
+                <div key={name}>
+                  <label
+                    style={{
+                      fontWeight: 600,
+                      color: "#363636",
+                      fontSize: "1.05rem",
+                      display: "block",
+                    }}
+                  >
+                    {label} {unit && `(${unit})`}
+                  </label>
+                  <input
+                    id={name}
+                    name={name}
+                    type={type}
+                    step={step}
+                    min={0}
+                    value={formData[name]}
+                    onChange={handleChange}
+                    placeholder={`Enter ${label.toLowerCase()}`}
+                    style={{
+                      width: "100%",
+                      marginTop: 6,
+                      padding: "10px",
+                      fontSize: "1rem",
+                      background: "#fafafa",
+                      border: "1.3px solid #e8e8e8",
+                      borderRadius: "6px",
+                      color: "#14181e",
+                    }}
+                  />
+                </div>
+              ) : null
+            )}
 
-            <div style={{ flex: "1 1 300px", minWidth: 280, marginBottom: 20 }}>
-              <label style={{ fontWeight: 600, color: "#363636", fontSize: "1.05rem", display: "block", marginBottom: 6 }}>
+            {/* Sex Radio Buttons */}
+            <div>
+              <label
+                style={{
+                  fontWeight: 600,
+                  color: "#363636",
+                  fontSize: "1.05rem",
+                  display: "block",
+                  marginBottom: 6,
+                }}
+              >
                 Sex
               </label>
-              <div style={{ display: "flex", gap: 24 }}>
-                <label style={{ fontWeight: 500, color: "#525252", fontSize: "1rem", display: "flex", alignItems: "center" }}>
+              <div style={{ display: "flex", gap: 20 }}>
+                <label style={{ display: "flex", alignItems: "center" }}>
                   <input
                     type="radio"
                     name="Sex"
@@ -201,7 +224,7 @@ export default function Table() {
                   />
                   Male
                 </label>
-                <label style={{ fontWeight: 500, color: "#525252", fontSize: "1rem", display: "flex", alignItems: "center" }}>
+                <label style={{ display: "flex", alignItems: "center" }}>
                   <input
                     type="radio"
                     name="Sex"
@@ -233,42 +256,54 @@ export default function Table() {
               transition: "all 0.3s ease",
               opacity: loading ? 0.7 : 1,
             }}
-            onMouseEnter={(e) => !loading && (e.currentTarget.style.background = "#0a9745ff")}
-            onMouseLeave={(e) => !loading && (e.currentTarget.style.background = "#0bac54ff")}
+            onMouseEnter={(e) =>
+              !loading && (e.currentTarget.style.background = "#0a9745ff")
+            }
+            onMouseLeave={(e) =>
+              !loading && (e.currentTarget.style.background = "#0bac54ff")
+            }
           >
             {loading ? "Predicting..." : "Predict"}
           </button>
         </form>
 
-        {result && result.probability !== undefined ? (
+        {result && result.patient_id ? (
           <div
             style={{
               margin: "32px auto 0 auto",
               background: isHighRisk ? "#fff1f1" : "#f8fdf7",
-              border: `1.2px solid ${isHighRisk ? "#f1cccc" : "#e0f9ef"}`,
+              border: `1.2px solid ${
+                isHighRisk ? "#f1cccc" : "#e0f9ef"
+              }`,
               borderRadius: "10px",
               color: isHighRisk ? "#a11313" : "#157b52",
-              maxWidth: 520,
+              maxWidth: "95%",
               fontWeight: 600,
               fontSize: "1.05rem",
               textAlign: "center",
               padding: "24px 8px 20px 8px",
             }}
           >
-            <span style={{ fontSize: "26px", fontWeight: 700, display: "block", marginBottom: 8 }}>
-              {isHighRisk ? "⚠️ High Risk" : "✅ Low Risk"}
-            </span>
-            <span style={{ fontWeight: 600, fontSize: "18px" }}>
+            <div style={{ marginBottom: 8 }}>
+              Patient ID: {result.patient_id}
+            </div>
+            <div style={{ marginBottom: 8 }}>
+              Prediction: {isHighRisk ? "High Risk" : "Low Risk"}
+            </div>
+            <div style={{ marginBottom: 8 }}>
               Probability: {(result.probability * 100).toFixed(2)}%
-            </span>
-
+            </div>
             {result.download_link && (
-              <div style={{ marginTop: 12 }}>
+              <div>
                 <a
                   href={`http://127.0.0.1:8000${result.download_link}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ color: "#0bac54ff", fontWeight: 600, textDecoration: "underline" }}
+                  style={{
+                    color: "#0bac54ff",
+                    fontWeight: 600,
+                    textDecoration: "underline",
+                  }}
                 >
                   Download PDF Report
                 </a>
