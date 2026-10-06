@@ -3,22 +3,24 @@ __pycache__/
 *.pyc
 venv/
 .env
+.env*
 *.ipynb
 temp_pdfs/
 output.pdf
-*.json
 
-# Node/React (frontend inside backend)
-app/frontend/node_modules/
-app/frontend/build/
-app/frontend/.pnp
-app/frontend/coverage/
-app/frontend/.env*
+# Node/React
+frontend/node_modules/
+frontend/build/
+frontend/.pnp
+frontend/coverage/
+frontend/.env*
 
-# ML data and weights (already committed, but keep future changes out)
+# ML data and weights
 data/ECG/
 runs/
 models/*.pt
+models/*_old.pkl
+heart_fix_output/*.pkl
 *.cache
 
 # Misc

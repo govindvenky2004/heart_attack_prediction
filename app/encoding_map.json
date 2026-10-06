@@ -1,0 +1,41 @@
+{
+  "feature_order": [
+    "Age",
+    "Sex",
+    "ChestPainType",
+    "RestingBP",
+    "Cholesterol",
+    "FastingBS",
+    "RestingECG",
+    "MaxHR",
+    "ExerciseAngina",
+    "Oldpeak",
+    "ST_Slope"
+  ],
+  "encoding": {
+    "Sex": {
+      "M": 0,
+      "F": 1
+    },
+    "ChestPainType": {
+      "ATA": 0,
+      "NAP": 1,
+      "ASY": 2,
+      "TA": 3
+    },
+    "RestingECG": {
+      "Normal": 0,
+      "ST": 1,
+      "LVH": 2
+    },
+    "ExerciseAngina": {
+      "N": 0,
+      "Y": 1
+    },
+    "ST_Slope": {
+      "Up": 0,
+      "Flat": 1,
+      "Down": 2
+    }
+  }
+}

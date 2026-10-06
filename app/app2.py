@@ -5,7 +5,7 @@ import uuid
 import math
 from datetime import datetime
 from typing import Optional
-
+import json
 import joblib
 import pandas as pd
 import requests
@@ -129,48 +129,35 @@ class Appointment(BaseModel):
 # --------------------------------------------------------------------
 # Helper Functions
 # --------------------------------------------------------------------
+"""Step 3 (only if step 1 says MISMATCH): replace decode_patient_data in app2.py with this.
+It reads encoding_map.json, so the decoder always matches how the model was trained.
+Put encoding_map.json next to app2.py. Also make the React form send these same codes
+(use the codes printed by step 1 as the <option value=...> numbers)."""
+
+_MAP_PATH = os.path.join(os.path.dirname(__file__), "encoding_map.json")
+with open(_MAP_PATH) as _f:
+    _ENC = json.load(_f)["encoding"]            # {"Sex": {"M": 0, "F": 1}, ...}
+_LABELS = {
+    "Sex": {"M": "Male", "F": "Female"},
+    "ChestPainType": {"TA": "Typical Angina", "ATA": "Atypical Angina", "NAP": "Non-Anginal", "ASY": "Asymptomatic"},
+    "RestingECG": {"Normal": "Normal", "ST": "ST-T Abnormality", "LVH": "LV Hypertrophy"},
+    "ExerciseAngina": {"N": "No", "Y": "Yes"},
+    "ST_Slope": {"Up": "Upsloping", "Flat": "Flat", "Down": "Downsloping"},
+}
+
 def decode_patient_data(data: dict) -> dict:
-    """Decode numeric features and add units."""
-    mappings = {
-        "Sex": {0: "Female", 1: "Male"},
-        "ChestPainType": {
-            0: "Typical Angina",
-            1: "Atypical Angina",
-            2: "Non-Anginal",
-            3: "Asymptomatic",
-        },
-        "RestingECG": {
-            0: "Normal",
-            1: "ST-T Abnormality",
-            2: "LV Hypertrophy",
-        },
-        "ExerciseAngina": {0: "No", 1: "Yes"},
-        "ST_Slope": {
-            0: "Downsloping",
-            1: "Flat",
-            2: "Upsloping",
-        },
-        "FastingBS": {
-            0: "Normal (<120 mg/dL)",
-            1: "High (≥120 mg/dL)",
-        },
-    }
-
     decoded = data.copy()
-    for key, mapping in mappings.items():
-        if key in decoded:
-            decoded[key] = mapping.get(decoded[key], decoded[key])
-
-    # Add units and format numeric fields
-    if "RestingBP" in decoded:
-        decoded["RestingBP"] = f"{decoded['RestingBP']} mmHg"
-    if "Cholesterol" in decoded:
-        decoded["Cholesterol"] = f"{decoded['Cholesterol']} mg/dL"
-    if "MaxHR" in decoded:
-        decoded["MaxHR"] = f"{decoded['MaxHR']} bpm"
-    if "Oldpeak" in decoded:
-        decoded["Oldpeak"] = f"{decoded['Oldpeak']} mm"
-
+    for col, enc in _ENC.items():
+        inv = {v: k for k, v in enc.items()}      # code -> raw value
+        if col in decoded:
+            raw = inv.get(decoded[col], decoded[col])
+            decoded[col] = _LABELS.get(col, {}).get(raw, raw)
+    if "FastingBS" in decoded:
+        decoded["FastingBS"] = "High (>=120 mg/dL)" if decoded["FastingBS"] == 1 else "Normal (<120 mg/dL)"
+    if "RestingBP" in decoded: decoded["RestingBP"] = f"{decoded['RestingBP']} mmHg"
+    if "Cholesterol" in decoded: decoded["Cholesterol"] = f"{decoded['Cholesterol']} mg/dL"
+    if "MaxHR" in decoded: decoded["MaxHR"] = f"{decoded['MaxHR']} bpm"
+    if "Oldpeak" in decoded: decoded["Oldpeak"] = f"{decoded['Oldpeak']} mm"
     return decoded
 
 

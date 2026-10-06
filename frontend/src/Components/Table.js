@@ -81,18 +81,48 @@ export default function Table() {
       ? result.probability >= RISK_THRESHOLD
       : false;
 
+  // Codes MUST match the training encoding (see encoding_map.json):
+  // Sex M=0,F=1 | ChestPainType ATA=0,NAP=1,ASY=2,TA=3 | RestingECG Normal=0,ST=1,LVH=2
+  // ExerciseAngina N=0,Y=1 | ST_Slope Up=0,Flat=1,Down=2
+  const selectOptions = {
+    ChestPainType: [
+      { value: "0", label: "Atypical Angina (ATA)" },
+      { value: "1", label: "Non-Anginal Pain (NAP)" },
+      { value: "2", label: "Asymptomatic (ASY)" },
+      { value: "3", label: "Typical Angina (TA)" },
+    ],
+    FastingBS: [
+      { value: "0", label: "Normal (<120 mg/dL)" },
+      { value: "1", label: "High (>=120 mg/dL)" },
+    ],
+    RestingECG: [
+      { value: "0", label: "Normal" },
+      { value: "1", label: "ST-T wave abnormality" },
+      { value: "2", label: "Left ventricular hypertrophy" },
+    ],
+    ExerciseAngina: [
+      { value: "0", label: "No" },
+      { value: "1", label: "Yes" },
+    ],
+    ST_Slope: [
+      { value: "0", label: "Upsloping" },
+      { value: "1", label: "Flat" },
+      { value: "2", label: "Downsloping" },
+    ],
+  };
+
   const inputFields = [
     { label: "Name", name: "name", type: "text" },
     { label: "Age", name: "Age", type: "number", unit: "years" },
-    { label: "Chest Pain Type", name: "ChestPainType", type: "number", unit: "0-3" },
+    { label: "Chest Pain Type", name: "ChestPainType", type: "number" },
     { label: "Resting BP", name: "RestingBP", type: "number", unit: "mmHg" },
     { label: "Cholesterol", name: "Cholesterol", type: "number", unit: "mg/dL" },
-    { label: "Fasting BS", name: "FastingBS", type: "number", unit: "0=Normal,1=High" },
-    { label: "Resting ECG", name: "RestingECG", type: "number", unit: "0-2" },
+    { label: "Fasting BS", name: "FastingBS", type: "number" },
+    { label: "Resting ECG", name: "RestingECG", type: "number" },
     { label: "Max HR", name: "MaxHR", type: "number", unit: "bpm" },
-    { label: "Exercise Angina", name: "ExerciseAngina", type: "number", unit: "0=No,1=Yes" },
+    { label: "Exercise Angina", name: "ExerciseAngina", type: "number" },
     { label: "Oldpeak", name: "Oldpeak", type: "number", step: "0.01", unit: "mV" },
-    { label: "ST Slope", name: "ST_Slope", type: "number", unit: "0-2" },
+    { label: "ST Slope", name: "ST_Slope", type: "number" },
   ];
 
   return (
@@ -175,26 +205,55 @@ export default function Table() {
                   >
                     {label} {unit && `(${unit})`}
                   </label>
-                  <input
-                    id={name}
-                    name={name}
-                    type={type}
-                    step={step}
-                    min={0}
-                    value={formData[name]}
-                    onChange={handleChange}
-                    placeholder={`Enter ${label.toLowerCase()}`}
-                    style={{
-                      width: "100%",
-                      marginTop: 6,
-                      padding: "10px",
-                      fontSize: "1rem",
-                      background: "#fafafa",
-                      border: "1.3px solid #e8e8e8",
-                      borderRadius: "6px",
-                      color: "#14181e",
-                    }}
-                  />
+                  {selectOptions[name] ? (
+                    <select
+                      id={name}
+                      name={name}
+                      value={formData[name]}
+                      onChange={handleChange}
+                      required
+                      style={{
+                        width: "100%",
+                        marginTop: 6,
+                        padding: "10px",
+                        fontSize: "1rem",
+                        background: "#fafafa",
+                        border: "1.3px solid #e8e8e8",
+                        borderRadius: "6px",
+                        color: "#14181e",
+                      }}
+                    >
+                      <option value="" disabled>
+                        {`Select ${label.toLowerCase()}`}
+                      </option>
+                      {selectOptions[name].map((o) => (
+                        <option key={o.value} value={o.value}>
+                          {o.label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      id={name}
+                      name={name}
+                      type={type}
+                      step={step}
+                      min={0}
+                      value={formData[name]}
+                      onChange={handleChange}
+                      placeholder={`Enter ${label.toLowerCase()}`}
+                      style={{
+                        width: "100%",
+                        marginTop: 6,
+                        padding: "10px",
+                        fontSize: "1rem",
+                        background: "#fafafa",
+                        border: "1.3px solid #e8e8e8",
+                        borderRadius: "6px",
+                        color: "#14181e",
+                      }}
+                    />
+                  )}
                 </div>
               ) : null
             )}
@@ -217,8 +276,8 @@ export default function Table() {
                   <input
                     type="radio"
                     name="Sex"
-                    value="1"
-                    checked={formData.Sex === "1"}
+                    value="0"
+                    checked={formData.Sex === "0"}
                     onChange={handleRadioChange}
                     style={{ marginRight: 6 }}
                   />
@@ -228,8 +287,8 @@ export default function Table() {
                   <input
                     type="radio"
                     name="Sex"
-                    value="0"
-                    checked={formData.Sex === "0"}
+                    value="1"
+                    checked={formData.Sex === "1"}
                     onChange={handleRadioChange}
                     style={{ marginRight: 6 }}
                   />
