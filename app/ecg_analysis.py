@@ -1,46 +1,33 @@
+"""FastAPI-facing wrapper: keeps your EasyOCR reader, uses the rules in ecg_ocr.py."""
+import io
+
 import cv2
 import easyocr
 import numpy as np
 from PIL import Image
-import io
 
-reader = easyocr.Reader(['en'])
+from ecg_ocr import parse_metrics, interpret
 
-def analyze_ecg_image(file):
-    # Read uploaded image
-    image_bytes = file.file.read()
-    img = np.array(Image.open(io.BytesIO(image_bytes)))
+reader = easyocr.Reader(["en"])
 
-    # Convert to grayscale for better OCR
+
+def analyze_ecg_image(file_or_bytes):
+    """Accepts raw image bytes, or a FastAPI UploadFile (reads file.file)."""
+    image_bytes = file_or_bytes if isinstance(file_or_bytes, (bytes, bytearray)) else file_or_bytes.file.read()
+    img = np.array(Image.open(io.BytesIO(image_bytes)).convert("RGB"))
     gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 
-    # Extract text
     text_results = reader.readtext(gray)
-    extracted_text = " ".join([t[1] for t in text_results])
+    extracted_text = "\n".join(t[1] for t in text_results)  # one detected line per row
 
-    # Basic feature interpretation (rule-based first version)
-    analysis = []
-    if "ST" in extracted_text:
-        analysis.append("Possible ST-segment abnormality detected.")
-    if "brady" in extracted_text.lower():
-        analysis.append("Signs of bradycardia (slow heart rate).")
-    if "tachy" in extracted_text.lower():
-        analysis.append("Signs of tachycardia (fast heart rate).")
+    result = interpret(parse_metrics(extracted_text))
+    result["extracted_text"] = extracted_text
+    return result
 
-    if not analysis:
-        analysis.append("Normal sinus rhythm or unremarkable ECG pattern detected.")
 
-    return {
-        "extracted_text": extracted_text,
-        "interpretation": analysis
-    }
 if __name__ == "__main__":
-    from types import SimpleNamespace
     class DummyFile:
         def __init__(self, path):
             self.file = open(path, "rb")
 
-    dummy_file = DummyFile("ecg_test.jpg")  # change name if different
-    result = analyze_ecg_image(dummy_file)
-    print("\n🩺 ECG Analysis Result:")
-    print(result)
+    print(analyze_ecg_image(DummyFile("ecg_test.jpg")))

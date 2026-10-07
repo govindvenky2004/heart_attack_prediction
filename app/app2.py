@@ -35,7 +35,7 @@ from PyPDF2 import PdfReader, PdfWriter
 from dotenv import load_dotenv
 from ultralytics import YOLO
 from PIL import Image as PILImage
-
+from ecg_analysis import analyze_ecg_image
 from heart_chatbot import HeartChatbot  # custom chatbot
 
 # --------------------------------------------------------------------
@@ -568,10 +568,15 @@ async def analyze_ecg(file: UploadFile = File(...)):
             "ECG pattern detected. Please consult a cardiologist for detailed evaluation.",
         )
 
+        ocr = analyze_ecg_image(image_bytes)
+
         return {
             "predicted_class": top_class_name,
             "confidence": f"{confidence * 100:.2f}%",
             "interpretation": interpretation,
+            "ocr_findings": ocr["findings"],
+            "ocr_status": ocr["status"],
+            "extracted_text": ocr["extracted_text"],
         }
 
     except Exception as e:
